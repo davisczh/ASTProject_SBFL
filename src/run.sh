@@ -1,5 +1,6 @@
 #!/bin/bash
 source ./build.sh
+
 # Define project specifics
 PID="Lang"
 BID="5"
