@@ -29,13 +29,13 @@ if [ ! -d "$work_dir/defects4j" ]; then
     git clone https://github.com/rjust/defects4j.git
     cd "$work_dir/defects4j"
     ./init.sh
-    cpanm --installdeps .
-    export D4J_HOME="$work_dir/defects4j"
+     export D4J_HOME="$work_dir/defects4j"
 else
     echo "Defects4J already cloned and initialized."
     export D4J_HOME="$work_dir/defects4j"
 fi
-
+cd "$work_dir/defects4j"
+cpanm --installdeps .
 export TZ='America/Los_Angeles'  # Required timezone for some D4J projects
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
