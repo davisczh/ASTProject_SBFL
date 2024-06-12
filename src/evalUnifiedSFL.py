@@ -1,7 +1,11 @@
 import pandas as pd
 import re
+import os
 
-BUG_REPORT_PATH = '/home/angela/CS453/ASTProject_SBFL/workdir/Lang-5b/sfl/txt/ochiai.ranking.csv'
+# Get the current working directory
+current_dir = os.getcwd()
+
+BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', 'Lang-5b', 'sfl', 'txt', 'ochiai.ranking.csv')
 BUG_ID = 5
 
 ranking = pd.read_csv(BUG_REPORT_PATH, delimiter=';')
@@ -9,8 +13,11 @@ ranking = pd.read_csv(BUG_REPORT_PATH, delimiter=';')
 # 1. find position of the real bug is :D
 buggy_line = 0
 
+project_name = 'Lang-5b'
+
 # Open and read the contents of a text file line by line
-f = open('/home/angela/CS453/ASTProject_SBFL/workdir/Lang-5b/failing_tests', 'r')
+f = open(os.path.join(current_dir, '..', 'workdir', 'Lang-5b', 'faults', 'failing_tests'))
+# f = open('/home/angela/CS453/ASTProject_SBFL/workdir/Lang-5b/failing_tests', 'r')
 # search for buggy line
 line = f.readlines()
 line = line[2]
@@ -39,3 +46,8 @@ buggy_sus = float(ranking.loc[ranking['name'].str.contains(buggy_line), 'suspici
 accuracy = buggy_sus/buggy_rank
 
 print(accuracy)
+
+accuracies = {}
+accuracies[project_name] = accuracy
+
+print(accuracies)

@@ -49,3 +49,24 @@
    - This directory will contain the Spectrum-Based Fault Localization (SBFL) reports.
 
 **Note:** `defects4j` and `gzoltar` should always be there by default after you run `run.sh` for the first time.
+
+7. Create failing tests file
+   - Creates a `failing_test` file within the faults folder within Lang-5b folder.
+   - It will be used to check for the accuracy of the fault localisation.
+
+8. Prepare Docker for `pandas` library
+
+**Execute these in the Docker Desktop:**
+```bash
+apt update && apt install -y python3-pip
+```
+
+```bash
+apt install -y python3-pip
+```
+
+```bash
+pip install pandas
+```
+
+
