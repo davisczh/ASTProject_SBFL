@@ -9,7 +9,11 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     cpanminus \
     maven \ 
-    nano 
+    nano \
+    python3-pip && \
+    pip install pandas
+
+
 
 WORKDIR /workdir
 
