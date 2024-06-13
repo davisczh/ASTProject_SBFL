@@ -1,25 +1,18 @@
 import pandas as pd
-import re
 import os
+def read_eval(BUG_REPO, bug_report_path):
 
-# Change this to what is needed
-project_names = ['Lang-5b', 'Lang-6b', 'Lang-7b']
-
-def read_eval(bug_report_path, project_name):
     ranking = pd.read_csv(bug_report_path, delimiter=';')
-
-    # 1. find position of the real bug is :D
     buggy_line = 0
 
-    # Open and read the contents of a text file line by line
-    f = open(os.path.join(current_dir, '..', 'workdir', project_name, 'faults', 'failing_tests'))
-    # search for buggy line
+    f = open(os.path.join('/', 'workdir', BUG_REPO, 'faults', 'failing_tests'))
+
     line = f.readlines()
     line = line[2]
     x = line.split(':')[-1]
     buggy_line = x.split(')')[0]
 
-
+    # print(buggy_line)
     rank = 1
     previous = 0
     for index, row in ranking.iterrows():
@@ -38,51 +31,39 @@ def read_eval(bug_report_path, project_name):
 
     buggy_rank = float(ranking.loc[ranking['name'].str.contains(buggy_line), 'rank'].values[0])
     buggy_sus = float(ranking.loc[ranking['name'].str.contains(buggy_line), 'suspiciousness_value'].values[0])
-    accuracy = buggy_sus/buggy_rank
 
-    print(accuracy)
+    return buggy_rank, buggy_sus
 
-    return accuracy
 
-def compare_splits(accuracies, no_of_splits):
-    original = accuracies[0]
-    if no_of_splits == 3:
-        # Take the last 3 splits and find their average
-        total = 0
-        for k,v in accuracies.items():
-            if k == 0:
-                continue
-            else:
-                total += v
 
-    average = total / no_of_splits
-    if original > average:
-        print('Non-splitted is more accurate')
-    else:
-        print('Splitting is more accurate')
 
-    print(original, average)
-    return original, average
+for BUG_REPO in ['Lang-5b', 'Lang-6b', 'Lang-7b']:
 
-# Get the current working directory
-current_dir = os.getcwd()
+    BUG_REPORT_PATH = os.path.join('/', 'workdir', BUG_REPO, 'sfl', 'txt', 'ochiai.ranking.csv')
+    BUG_ID = 5
+    no_of_splits = 3
 
-# Pre split of the library chosen
-for project_name in project_names:
-    BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, 'sfl', 'txt', 'ochiai.ranking.csv')
+
+
+
     accuracies = {}
-    accuracy= read_eval(BUG_REPORT_PATH, project_name)
-    accuracies[0] = accuracy
-
-    # Post split
-    no_of_splits = 3 # change this based on the amount of splits specified in run_withsplit.sh
-    for i in range(1,no_of_splits+1):
-        BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, f'report_part{i}', 'sfl', 'txt', 'ochiai.ranking.csv')
-        accuracy= read_eval(BUG_REPORT_PATH, project_name)
-        accuracies[i] = accuracy
+    rank, sus= read_eval(BUG_REPO,BUG_REPORT_PATH)
+    accuracies[0] = sus
+    total_split_sus = 0
+    # Post split Lang-5b
+    for i in range(1, no_of_splits+1):
+        path = os.path.join('/', 'workdir', BUG_REPO, f'report_part{i}', 'sfl', 'txt', 'ochiai.ranking.csv')
+        rank, sus= read_eval(BUG_REPO,path)
+        accuracies[i] = sus
+        total_split_sus += sus
 
     print(accuracies)
+    average_split_sus = total_split_sus / no_of_splits
 
-    original, splitted = compare_splits(accuracies, no_of_splits)
+    print('Original sus:', accuracies[0])
+    print('Average split sus:', average_split_sus)
 
-
+    if average_split_sus > accuracies[0]:
+        print('Splitting finds buggy line more suspicious')
+    else:
+        print('Splitting does not find buggy line more suspicious')
