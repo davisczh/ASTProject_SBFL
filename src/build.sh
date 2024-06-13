@@ -29,7 +29,7 @@ if [ ! -d "$work_dir/defects4j" ]; then
     git clone https://github.com/rjust/defects4j.git
     cd "$work_dir/defects4j"
     ./init.sh
-     export D4J_HOME="$work_dir/defects4j"
+    export D4J_HOME="$work_dir/defects4j"
 else
     echo "Defects4J already cloned and initialized."
     export D4J_HOME="$work_dir/defects4j"
