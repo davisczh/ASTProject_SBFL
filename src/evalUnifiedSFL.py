@@ -34,17 +34,11 @@ def read_eval(BUG_REPO, bug_report_path):
 
     return buggy_rank, buggy_sus
 
-
-
-
 for BUG_REPO in ['Lang-5b', 'Lang-6b', 'Lang-7b']:
 
     BUG_REPORT_PATH = os.path.join('/', 'workdir', BUG_REPO, 'sfl', 'txt', 'ochiai.ranking.csv')
     BUG_ID = 5
     no_of_splits = 3
-
-
-
 
     accuracies = {}
     rank, sus= read_eval(BUG_REPO,BUG_REPORT_PATH)
