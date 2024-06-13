@@ -2,7 +2,10 @@ import pandas as pd
 import re
 import os
 
-def read_eval(bug_report_path):
+# Change this to what is needed
+project_name = 'Lang-5b'
+
+def read_eval(bug_report_path, project_name):
 
     ranking = pd.read_csv(bug_report_path, delimiter=';')
 
@@ -10,8 +13,7 @@ def read_eval(bug_report_path):
     buggy_line = 0
 
     # Open and read the contents of a text file line by line
-    f = open(os.path.join(current_dir, '..', 'workdir', 'Lang-5b', 'faults', 'failing_tests'))
-    # f = open('/home/angela/CS453/ASTProject_SBFL/workdir/Lang-5b/failing_tests', 'r')
+    f = open(os.path.join(current_dir, '..', 'workdir', project_name, 'faults', 'failing_tests'))
     # search for buggy line
     line = f.readlines()
     line = line[2]
@@ -66,24 +68,23 @@ def compare_splits(accuracies, no_of_splits):
 # Get the current working directory
 current_dir = os.getcwd()
 
-# Pre split Lang-5b
-BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', 'Lang-5b', 'sfl', 'txt', 'ochiai.ranking.csv')
+# Pre split of the library chosen
+BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, 'sfl', 'txt', 'ochiai.ranking.csv')
 BUG_ID = 5
 accuracies = {}
-project_name = 'Lang-5b'
 
-accuracy= read_eval(BUG_REPORT_PATH)
+accuracy= read_eval(BUG_REPORT_PATH, project_name)
 accuracies[0] = accuracy
 
 
-# Post split Lang-5b
+# Post split
 for i in range(1,4):
-    BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', 'Lang-5b', f'report_part{i}', 'sfl', 'txt', 'ochiai.ranking.csv')
-    accuracy= read_eval(BUG_REPORT_PATH)
+    BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, f'report_part{i}', 'sfl', 'txt', 'ochiai.ranking.csv')
+    accuracy= read_eval(BUG_REPORT_PATH, project_name)
     accuracies[i] = accuracy
 
 print(accuracies)
 
-original_lang5b, splitted_lang5b = compare_splits(accuracies, 3)
+original, splitted = compare_splits(accuracies, 3)
 
 
