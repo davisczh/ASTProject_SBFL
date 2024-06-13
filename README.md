@@ -24,8 +24,6 @@
      nano /src/run.sh
      ```
    - Make the following edits:
-     - Set `PID="Lang"`
-     - Set `BID="5"`
      - In the last command, choose which formula to use by editing:
        ```bash
        --formula "ochiai"
@@ -50,8 +48,13 @@
 
 **Note:** `defects4j` and `gzoltar` should always be there by default after you run `run.sh` for the first time.
 
-7. Create failing tests file
-   - Creates a `failing_test` file within the faults folder within Lang-5b folder.
+7. Create failing tests file by running `create_failing.sh`
+
+```bash
+bash create_failing.sh
+```
+
+   - Creates a `failing_test` file within the faults folder within Lang-5b (could be 6b or 7b also) folder.
    - It will be used to check for the accuracy of the fault localisation.
 
 8. Prepare Docker for `pandas` library
@@ -69,4 +72,11 @@ apt install -y python3-pip
 pip install pandas
 ```
 
+9. Run `run_withsplit.sh` to run on a splitted part of the library used.
+
+```bash
+bash run_withsplit.sh
+```
+
+10. 
 

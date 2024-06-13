@@ -3,10 +3,9 @@ import re
 import os
 
 # Change this to what is needed
-project_name = 'Lang-5b'
+project_names = ['Lang-5b', 'Lang-6b', 'Lang-7b']
 
 def read_eval(bug_report_path, project_name):
-
     ranking = pd.read_csv(bug_report_path, delimiter=';')
 
     # 1. find position of the real bug is :D
@@ -69,22 +68,21 @@ def compare_splits(accuracies, no_of_splits):
 current_dir = os.getcwd()
 
 # Pre split of the library chosen
-BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, 'sfl', 'txt', 'ochiai.ranking.csv')
-BUG_ID = 5
-accuracies = {}
-
-accuracy= read_eval(BUG_REPORT_PATH, project_name)
-accuracies[0] = accuracy
-
-
-# Post split
-for i in range(1,4):
-    BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, f'report_part{i}', 'sfl', 'txt', 'ochiai.ranking.csv')
+for project_name in project_names:
+    BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, 'sfl', 'txt', 'ochiai.ranking.csv')
+    accuracies = {}
     accuracy= read_eval(BUG_REPORT_PATH, project_name)
-    accuracies[i] = accuracy
+    accuracies[0] = accuracy
 
-print(accuracies)
+    # Post split
+    no_of_splits = 3 # change this based on the amount of splits specified in run_withsplit.sh
+    for i in range(1,no_of_splits+1):
+        BUG_REPORT_PATH = os.path.join(current_dir, '..', 'workdir', project_name, f'report_part{i}', 'sfl', 'txt', 'ochiai.ranking.csv')
+        accuracy= read_eval(BUG_REPORT_PATH, project_name)
+        accuracies[i] = accuracy
 
-original, splitted = compare_splits(accuracies, 3)
+    print(accuracies)
+
+    original, splitted = compare_splits(accuracies, no_of_splits)
 
 

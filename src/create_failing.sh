@@ -6,18 +6,21 @@ source ./build.sh
 
 # Set the project ID and bug ID
 PID="Lang"
-BID="5"
+for BID in {5..7}
+do
 
-# Set the working directory
-work_dir="/workdir"
+    # Set the working directory
+    work_dir="/workdir"
 
-# Checkout the buggy version of the project
-cd "$work_dir"
-"$D4J_HOME/framework/bin/defects4j" checkout -p "$PID" -v "${BID}b" -w "$work_dir/$PID-${BID}b/faults"
+    # Checkout the buggy version of the project
+    cd "$work_dir"
+    "$D4J_HOME/framework/bin/defects4j" checkout -p "$PID" -v "${BID}b" -w "$work_dir/$PID-${BID}b/faults"
 
-# Compile the project
-cd "$work_dir/$PID-${BID}b/faults"
-"$D4J_HOME/framework/bin/defects4j" compile
+    # Compile the project
+    cd "$work_dir/$PID-${BID}b/faults"
+    "$D4J_HOME/framework/bin/defects4j" compile
 
-# Run the tests and save the output
-"$D4J_HOME/framework/bin/defects4j" test
+    # Run the tests and save the output
+    "$D4J_HOME/framework/bin/defects4j" test
+
+done
